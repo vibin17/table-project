@@ -1,24 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import TokenTable from './components/TokenTable/TokenTable';
+import { Container } from './shared-styles/shared';
+import { FieldStatuses, TableItemData, } from './types/types';
+
+const data: TableItemData[] = [
+  {
+    id: 1, name: 'Pyshky.net', 
+    status: FieldStatuses.GREEN, type: 'TRST', 
+    conditions: 'x2,6 months', 
+    volume: 120000, roi: 4, 
+    free: 20, hedge: 20
+  },
+  {
+    id: 2, name: 'NFT-Flowershop', 
+    status: FieldStatuses.YELLOW, type: 'THT', 
+    conditions: 'x4,2 years', 
+    volume: 80000, roi: 23, 
+    free: 12, hedge: 0
+  },
+  {
+    id: 4, name: 'Web3 P2P University', 
+    status: FieldStatuses.RED, type: 'TRST', 
+    conditions: 'x2,1 years', 
+    volume: 200000, roi: 6, 
+    free: 1, hedge: 0
+  }
+]
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Container>
+        <div>
+          <TokenTable items={data}/>
+        </div>
+      </Container>
     </div>
   );
 }
