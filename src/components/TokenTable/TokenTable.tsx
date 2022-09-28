@@ -13,11 +13,13 @@ type props = {
 
 const TokenTable = ({ items }: props) => {
     let dataRows = useMemo(() => 
-        items.map(({id, status, ...itemValues}, index) => (
-            <Styled.TableRow key={index} status={status}>
-                {Object.values(itemValues).map((value, index) => (
-                    <Styled.TableCell key={index}>
-                        {value}
+        items.map(({id, status, ...itemValues}, itemIndex) => (
+            <Styled.TableRow key={itemIndex} status={status}>
+                {Object.values(itemValues).map((value, valueIndex) => (
+                    <Styled.TableCell key={valueIndex}>
+                        <Styled.CellContent status={valueIndex == 0? status : null}>
+                            {value}
+                        </Styled.CellContent>
                     </Styled.TableCell>
                 ))}
             </Styled.TableRow>
@@ -25,7 +27,7 @@ const TokenTable = ({ items }: props) => {
     [items])
     
     return (
-        <Styled.Table>
+        <Styled.Table cellSpacing={0}>
             <Styled.TableHead>
                 <Styled.TableRow>
                     <Styled.TableCell>
