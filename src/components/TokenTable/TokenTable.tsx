@@ -17,8 +17,13 @@ const TokenTable = ({ items }: props) => {
             <Styled.TableRow key={itemIndex} status={status}>
                 {Object.values(itemValues).map((value, valueIndex) => (
                     <Styled.TableCell key={valueIndex}>
-                        <Styled.CellContent status={valueIndex == 0? status : null}>
+                        <Styled.CellContent status={valueIndex === 0? status : null}>
                             {value}
+                            {valueIndex == 6 &&
+                                <Styled.BuyButton>
+                                    Buy
+                                </Styled.BuyButton>
+                            }
                         </Styled.CellContent>
                     </Styled.TableCell>
                 ))}

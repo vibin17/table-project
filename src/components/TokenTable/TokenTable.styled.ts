@@ -24,7 +24,7 @@ export const TableRow = styled.tr<{ status?: FieldStatuses | null }>`
 export const TableCell = styled.td`
     font: normal 16px 'Quicksand';
     padding: 0 10px;
-    color: rgb(195, 197, 197);
+    color: rgb(161, 161, 161);
     
     ${TableBody} & {
         color: rgb(0, 0, 0);
@@ -35,6 +35,7 @@ export const TableCell = styled.td`
 
 export const CellContent = styled.div<{ status?: FieldStatuses | null }>`
     display: flex;
+    width: 100%;
     justify-content: flex-start;
     align-items: center;
     gap: 0.7em;
@@ -51,6 +52,21 @@ export const CellContent = styled.div<{ status?: FieldStatuses | null }>`
         `
     }
 
+`
+
+export const BuyButton = styled.button`
+    outline: 0;
+    background: transparent;
+    border: solid 1px rgb(153, 18, 158);
+    color: rgb(153, 18, 158);
+    transition: all .2s;
+    font: bold 16px 'Quicksand';
+    border-radius: 15%;
+    padding: 6px 14px;
+    &:hover {
+        background: rgb(153, 18, 158);
+        color: rgb(255, 255, 255);
+    }
 `
 
 const bgColors = new Map<FieldStatuses, string>([
