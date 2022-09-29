@@ -2,9 +2,9 @@ import React from 'react';
 import './App.css';
 import TokenTable from './components/TokenTable/TokenTable';
 import { Container } from './shared-styles/shared';
-import { FieldStatuses, TableItemData, } from './types/types';
+import { FieldStatuses, DataItem, } from './types/types';
 
-const data: TableItemData[] = [
+const data: DataItem[] = [
   {
     id: 1, name: 'Pyshky.net', 
     status: FieldStatuses.GREEN, type: 'TRST', 
@@ -33,7 +33,17 @@ function App() {
     <div className="App">
       <Container>
         <div>
-          <TokenTable items={data}/>
+          <TokenTable 
+            items={data} 
+            sortColumnName='' 
+            filters={null}
+            onSort={(fieldName: string) => {
+
+            }}
+            onFilter={() => {}}
+            onBuy={(id: number) => {
+              alert(id)
+            }}/>
         </div>
       </Container>
     </div>
