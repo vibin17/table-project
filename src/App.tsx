@@ -32,19 +32,17 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <div>
-          <TokenTable 
-            items={data} 
-            sortColumnName='' 
-            filters={null}
-            onSort={(fieldName: string) => {
+        <TokenTable 
+          items={data} 
+          sortColumnName='' 
+          filters={null}
+          onSort={(fieldName: string) => {
 
-            }}
-            onFilter={() => {}}
-            onBuy={(id: number) => {
-              alert(id)
-            }}/>
-        </div>
+          }}
+          onFilter={() => {}}
+          onBuy={(id: number) => {
+            alert(id)
+          }}/>
       </Container>
     </div>
   );

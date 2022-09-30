@@ -2,7 +2,8 @@ import styled, { css } from 'styled-components';
 import { FieldStatuses } from '../../types/types';
 
 export const Table = styled.table`
-     border-spacing: 0 10px;
+    border-spacing: 0 10px;
+    width: 100%;
 `
 
 export const TableHead = styled.thead`
@@ -81,8 +82,7 @@ export const BuyButton = styled.button`
 export const FilterSection = styled.div`
     display: flex;
     height: 100%;
-    align-items: flex-start;
-
+    align-items: center;
     &::before {
             display: block;
             content: '';
