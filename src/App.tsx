@@ -1,50 +1,72 @@
 import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import TokenTable from './components/TokenTable/TokenTable';
-import { Container } from './shared-styles/shared';
-import { FieldStatuses, DataItem, } from './types/types';
-
-const data: DataItem[] = [
-  {
-    id: 1, name: 'Pyshky.net', 
-    status: FieldStatuses.GREEN, type: 'TRST', 
-    conditions: 'x2,6 months', 
-    volume: 120000, roi: 4, 
-    free: 20, hedge: 20
-  },
-  {
-    id: 2, name: 'NFT-Flowershop', 
-    status: FieldStatuses.YELLOW, type: 'THT', 
-    conditions: 'x4,2 years', 
-    volume: 80000, roi: 23, 
-    free: 12, hedge: 0
-  },
-  {
-    id: 4, name: 'Web3 P2P University', 
-    status: FieldStatuses.RED, type: 'TRST', 
-    conditions: 'x2,1 years', 
-    volume: 200000, roi: 6, 
-    free: 1, hedge: 0
-  }
-]
+import { getInputData } from './data/data';
+import ProjectPage from './pages/ProjectPage/ProjectPage';
+import { DataItem, Filter } from './types/types';
 
 function App() {
-  return (
-    <div className="App">
-      <Container>
-        <TokenTable 
-          items={data} 
-          sortColumnName='' 
-          filters={null}
-          onSort={(fieldName: string) => {
+  const onSort = (fieldName: string, data: DataItem[]) => {
+    let factor = 1
+    if (fieldName.split(/-/).length > 1) {
+      factor = -1
+      fieldName = fieldName.slice(1)
+    } if (fieldName === 'Project') {
+      return data.sort((a, b) => //sorted by proj name
+        factor * (a.name > b.name ? 1 : -1)
+      )
+    } if (fieldName === 'Volume') {
+      return data.sort((a, b) => {
+        let numbA = parseInt(a.volume.toString().replaceAll('$', '').replaceAll(new RegExp(/\s/, 'g'), ''))
+        let numbB = parseInt(b.volume.toString().replaceAll('$', '').replaceAll(new RegExp(/\s/, 'g'), ''))
+        return factor * (
+          numbA > numbB ? 1 : -1)
+      })
+    }
+    return data
+  }
 
-          }}
-          onFilter={() => {}}
-          onBuy={(id: number) => {
-            alert(id)
-          }}/>
-      </Container>
-    </div>
+  const onFilter = (filter: Filter, data: DataItem[]) => {
+    let filteredData = data
+      .filter((item) => filter.status === '' || item.status === filter.status)
+      .filter((item) => filter.type === '' || item.type === filter.type)
+    return filteredData
+  }
+
+  const onBuy = (id: number) => {
+    alert(`Project №${id}`)
+  }
+
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <div className="container">
+          <Routes>
+            <Route path='/'
+              element={
+                <TokenTable 
+                  items={getInputData()} 
+                  sortColumnName='' 
+                  filters={{
+                    status: '',
+                    type: ''
+                  }}
+                  onSort={onSort}
+                  onFilter={onFilter}
+                  onBuy={onBuy}
+                />
+              }
+            />
+            
+
+            <Route path='/project/:id'
+              element={<ProjectPage/>}
+            />
+          </Routes>
+        </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
