@@ -28,11 +28,11 @@ export const getColumns: () => Column[] = () => [
     {
         name: 'Project',
         sortable: true,
-        filterable: true
+        filterParam: 'status'
     },
     {
         name: 'Token type',
-        filterable: true
+        filterParam: 'type'
     },
     {
         name: 'Conditions',

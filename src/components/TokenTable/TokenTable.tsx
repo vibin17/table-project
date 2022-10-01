@@ -16,7 +16,10 @@ type props = {
 const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }: props) => {
     let columns = getColumns()
     let nav = useNavigate()
-    let [data, setData] = useState<DataItem[]>([])
+    let formattedData = useMemo(() => 
+        items.map((item) => formatData(item)), 
+    [items])
+    let [processedData, setProcessedData] = useState<DataItem[]>([])
     let [sortField, setSortField] = useState(sortColumnName)
     let [activeFilterMenu, setActiveFilterMenu] = useState('') // '' when no filter select is active
     let [filter, setFilter] = useState<Filter>(filters)
@@ -24,7 +27,7 @@ const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }:
         status: ['', ...Array.from(new Set(items.map((item) => item.status)))],
         type: ['', ...Array.from(new Set(items.map((item) => item.type)))]
     }
-    let dataRows = useMemo(() => data.map(({id, status, ...itemValues}, itemIndex) => (
+    let dataRows = useMemo(() => processedData.map(({id, status, ...itemValues}, itemIndex) => (
             <Styled.TableRow 
                 key={itemIndex} 
                 status={status}
@@ -52,11 +55,11 @@ const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }:
                     </Styled.TableCell>
                 ))}
             </Styled.TableRow>
-    )), [data, onBuy])
+    )), [processedData, onBuy])
 
     useEffect(() => {
-        setData(items.map((item) => formatData(item)))
-    }, [items])
+        setProcessedData(onSort(sortColumnName, onFilter(filter, [...formattedData])))
+    }, [formattedData])
 
     return (
         <Styled.Table cellSpacing={0}>
@@ -67,7 +70,7 @@ const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }:
                             key={index}
                         >
                             <Styled.CellContent>
-                                {col.filterable && 
+                                {col.filterParam && 
                                 <Styled.FilterSection 
                                     active={col.name === activeFilterMenu}
                                     onClick={(event) => {
@@ -80,9 +83,7 @@ const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }:
                                     }}
                                 >
                                     <Styled.Filters>
-                                        {col.name === 'Project' && filter.status 
-                                            || col.name === 'Token type' && filter.type 
-                                            || 'All'}
+                                        {filter[col.filterParam] || 'All'}
                                     </Styled.Filters>
                                 </Styled.FilterSection>}
                                 <Styled.CellText
@@ -96,8 +97,8 @@ const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }:
                                             sortParam = `-${sortParam}`
                                         }
                                         setSortField(sortParam)
-                                        let sortedData = onSort(sortParam, [...data])
-                                        setData(sortedData)
+                                        let sortedData = onSort(sortParam, [...processedData])
+                                        setProcessedData(sortedData)
                                     }}
                                 > 
                                     {col.name}
@@ -108,41 +109,23 @@ const TokenTable = ({ items, sortColumnName, filters, onSort, onFilter, onBuy }:
                                     />}
                                 </Styled.CellText>
                             </Styled.CellContent>
-                            {activeFilterMenu === col.name && col.name === 'Project' &&
+                            {(col.filterParam && activeFilterMenu === col.name) &&
                             <Styled.FilterSelect>
-                                {filterValues.status.map((val, index) => (
+                                {filterValues[col.filterParam].map((val, index) => (
                                     <Styled.FilterOption
                                         onClick={() => {
+                                            if (!col.filterParam) {
+                                                return
+                                            }
                                             let newFilter = {
                                                 ...filter,
-                                                status: val
+                                                [col.filterParam]: val
                                             }
                                             setFilter(newFilter)
                                             let filteredData = onFilter(newFilter, [...items])
-                                            let sortedAndFilteredData = onSort(sortField, [...filteredData])
-                                            setData(sortedAndFilteredData)
+                                            let sortedAndFilteredData = onSort(sortField, filteredData)
+                                            setProcessedData(sortedAndFilteredData)
                                             setActiveFilterMenu('')                                            
-                                        }}
-                                        key={index}
-                                    >
-                                        {val || 'Clear filter'}
-                                    </Styled.FilterOption>
-                                ))}    
-                            </Styled.FilterSelect>}
-                            {activeFilterMenu === col.name && col.name === 'Token type' &&
-                            <Styled.FilterSelect>
-                                {filterValues.type.map((val, index) => (
-                                    <Styled.FilterOption
-                                        onClick={() => {
-                                            let newFilter = {
-                                                ...filter,
-                                                type: val
-                                            }
-                                            setFilter(newFilter)
-                                            let filteredData = onFilter(newFilter, [...items])
-                                            let sortedAndFilteredData = onSort(sortField, [...filteredData])
-                                            setData(sortedAndFilteredData)
-                                            setActiveFilterMenu('')  
                                         }}
                                         key={index}
                                     >

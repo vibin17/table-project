@@ -6,7 +6,7 @@ export type Filter = {
 export type Column = {
     name: string
     sortable?: boolean
-    filterable?: boolean
+    filterParam?: keyof DataItem & keyof Filter
 }
 
 export type DataItem = {
